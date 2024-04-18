@@ -25,6 +25,7 @@ module.exports = {
   },
   plugins: ['jest'],
   rules: {
+    'import/extensions': 'off',
     'no-console': 'off',
     'prettier/prettier': [
       'warn',
