@@ -1,7 +1,8 @@
 module.export = {
   env: {
+    es6: true,
     es2023: true,
-    'shared-node-browser': true,
+    node: true,
     'jest/globals': true,
   },
   extends: [
@@ -15,12 +16,10 @@ module.export = {
     'plugin:jest/recommended',
   ],
   plugins: ['jest', 'import'],
-
+  parser: '@babel/eslint-parser',
   parserOptions: {
     ecmaVersion: 2023,
     sourceType: 'module',
-    allowImportExportEverywhere: true,
-    project: true,
   },
 
   settings: {
