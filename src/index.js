@@ -41,7 +41,9 @@ let file;
 try {
   file = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
 } catch (err) {
-  console.error(`Unknwon error when reading file "${fileName}" from ${process.cwd()}`);
+  console.error(
+    `Unknwon error when reading file "${fileName}" from ${process.cwd()}`,
+  );
   process.exit(1);
 }
 
