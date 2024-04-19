@@ -4,6 +4,13 @@ import currencies from './currencies.mjs';
 import { getWeekNumber } from './utils.mjs';
 
 const parseRule = (operationConfig, users) => {
+  const stack = [
+    (val) =>
+      operationConfig.percents ? (val * operationConfig.percents) / 100 : 0,
+    operationConfig.min && ((val) => Math.max(val, operationConfig.min.amount)),
+    operationConfig.max && ((val) => Math.min(val, operationConfig.max.amount)),
+  ].filter(Boolean);
+
   return (rowObj) => {
     let toFee = rowObj.operation.amount;
 
@@ -21,17 +28,10 @@ const parseRule = (operationConfig, users) => {
       toFee = Math.max(toFee - remainingLimit, 0);
     }
 
-    return [
-      (val) =>
-        operationConfig.percents ? (val * operationConfig.percents) / 100 : 0,
-      operationConfig.min &&
-        ((val) => Math.max(val, operationConfig.min.amount)),
-      operationConfig.max &&
-        ((val) => Math.min(val, operationConfig.max.amount)),
-      (val) =>
+    return stack
+      .concat((val) =>
         Number(val).toFixed(currencies[rowObj.operation.currency].fractions),
-    ]
-      .filter(Boolean)
+      )
       .reduce((acc, fn) => fn(acc), toFee);
   };
 };
