@@ -17,3 +17,7 @@ Run `npm run app input.json`
 ### Tests
 
 Run `npm run test`
+
+### Stress test
+
+Run `npm run stress-test` , it will populate file with 1 million transactions and process it

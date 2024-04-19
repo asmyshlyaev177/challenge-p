@@ -10,7 +10,8 @@
   },
   "scripts": {
     "test": "jest",
-    "app": "node src/index.mjs"
+    "app": "node src/index.mjs",
+    "stress-test": "node populateInput.mjs && time npm run app input1.json && echo ' ' && rm -rf input1.json"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
