@@ -1,17 +1,20 @@
-import dayjs from 'dayjs';
-import weekOfYear from 'dayjs/plugin/weekOfYear.js';
+import * as dateFns from 'date-fns';
 
 import currencies from './currencies.mjs';
-
-dayjs.extend(weekOfYear);
 
 const parseRule = (operationConfig, users) => {
   return (rowObj) => {
     let toFee = rowObj.operation.amount;
 
     if (operationConfig.week_limit) {
-      const date = dayjs(rowObj.date);
-      const limitKey = `${rowObj.user_id}-${date.year()}-${date.week()}`;
+      const { date } = rowObj;
+      const limitKey = `${rowObj.user_id}-${dateFns.getYear(date)}-${dateFns.getWeek(
+        date,
+        {
+          // 0 - Sunday, 1 Monday
+          weekStartsOn: 1,
+        },
+      )}`;
 
       const remainingLimit =
         users.get(limitKey) ?? operationConfig.week_limit.amount;
@@ -22,8 +25,8 @@ const parseRule = (operationConfig, users) => {
     }
 
     return [
-      operationConfig.percents &&
-        ((val) => (val * operationConfig.percents) / 100),
+      (val) =>
+        operationConfig.percents ? (val * operationConfig.percents) / 100 : 0,
       operationConfig.min &&
         ((val) => Math.max(val, operationConfig.min.amount)),
       operationConfig.max &&
