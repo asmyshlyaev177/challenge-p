@@ -1,4 +1,5 @@
-import dayjs from './dayjs.mjs';
+import * as dateFns from 'date-fns';
+
 import parseRule from './parseRule';
 
 const obj = {
@@ -84,9 +85,9 @@ describe('parseRule', () => {
 
       const rule = parseRule(config, users);
       expect(rule(obj)).toEqual('0.00');
-      // expect([...users]).toEqual([
-      //   ['1-2016-2', config.week_limit.amount - obj.operation.amount],
-      // ]);
+      expect([...users]).toStrictEqual([
+        ['1-2016-2', config.week_limit.amount - obj.operation.amount],
+      ]);
     });
 
     it('transaction equal limit', () => {
@@ -98,9 +99,9 @@ describe('parseRule', () => {
       expect(
         rule({ ...obj, operation: { ...obj.operation, amount: limit } }),
       ).toEqual('0.00');
-      // expect([...users]).toEqual([
-      //   ['1-2016-2', config.week_limit.amount - limit],
-      // ]);
+      expect([...users]).toStrictEqual([
+        ['1-2016-2', config.week_limit.amount - limit],
+      ]);
     });
 
     it('transaction above limit', () => {
@@ -114,35 +115,35 @@ describe('parseRule', () => {
       expect(
         rule({ ...obj, operation: { ...obj.operation, amount: transaction } }),
       ).toEqual((((transaction - limit) * percent) / 100).toFixed(2));
-      // expect([...users]).toEqual([
-      //   ['1-2016-2', Math.max(config.week_limit.amount - transaction, 0)],
-      // ]);
+      expect([...users]).toStrictEqual([
+        ['1-2016-2', Math.max(config.week_limit.amount - transaction, 0)],
+      ]);
     });
 
-    // TODO: rewrite
-    it.skip('3 transactions in a week', () => {
+    it('3 transactions in a week', () => {
       const config = { percents: 1, week_limit: { amount: 100 } };
       const users = new Map();
       const obj2 = {
         ...obj,
-        date: dayjs(obj.date).add(1, 'day'),
+        date: dateFns.addDays(obj.date, 1),
         operation: { ...obj.operation, amount: 50 },
       };
       const obj3 = {
         ...obj,
-        date: dayjs(obj.date).add(2, 'day'),
+        date: dateFns.addDays(obj.date, 2),
         operation: { ...obj.operation, amount: 100 },
       };
       const rule = parseRule(config, users);
       expect(rule(obj)).toEqual('0.00');
       expect(rule(obj2)).toEqual('0.50');
       expect(rule(obj3)).toEqual('1.00');
+      expect([...users]).toStrictEqual([['1-2016-2', 0]]);
     });
 
     it('should work', () => {
       const config = { percents: 0.3, week_limit: { amount: 1000 } };
       const users = new Map();
-      // 2016 year
+      // 2016 year January
       // Mo   Tu    We    Th    Fr    Sa    Su
       // 1    2     3
       // 4    5     6     7     8     9     10
@@ -192,6 +193,11 @@ describe('parseRule', () => {
           return acc;
         }, []),
       ).toEqual(['87.00', '3.00', '0.30', '0.30', '0.00']);
+
+      expect([...users]).toStrictEqual([
+        ['1-2016-2', 0],
+        ['1-2016-8', 700],
+      ]);
     });
   });
 });

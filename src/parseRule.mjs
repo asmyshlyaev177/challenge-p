@@ -1,6 +1,7 @@
 import * as dateFns from 'date-fns';
 
 import currencies from './currencies.mjs';
+import { getWeekNumber } from './utils.mjs';
 
 const parseRule = (operationConfig, users) => {
   return (rowObj) => {
@@ -8,12 +9,8 @@ const parseRule = (operationConfig, users) => {
 
     if (operationConfig.week_limit) {
       const { date } = rowObj;
-      const limitKey = `${rowObj.user_id}-${dateFns.getYear(date)}-${dateFns.getWeek(
+      const limitKey = `${rowObj.user_id}-${dateFns.getYear(date)}-${getWeekNumber(
         date,
-        {
-          // 0 - Sunday, 1 Monday
-          weekStartsOn: 1,
-        },
       )}`;
 
       const remainingLimit =

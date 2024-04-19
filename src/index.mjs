@@ -1,6 +1,7 @@
 import checkFile from './checkFile.mjs';
 import config from './config.mjs';
 import parseRule from './parseRule.mjs';
+import { removeKeyBefore } from './utils.mjs';
 
 const args = process.argv.slice(2);
 
@@ -9,14 +10,6 @@ const file = checkFile(args);
 class FeeManager {
   constructor() {
     this.config = {};
-    // TODO: cleanup
-    //     function removeKeyStartsWith(obj, letter) {
-    //     for (var prop in obj) {
-    //         if (obj.hasOwnProperty(prop) && prop[0] == letter){
-    //             delete obj[prop];
-    //         }
-    //     }
-    // }
     this.users = new Map();
   }
 
@@ -40,6 +33,10 @@ class FeeManager {
       },
     };
   };
+
+  cleanup = (date) => {
+    removeKeyBefore(this.users, date);
+  };
 }
 
 const feeManager = new FeeManager();
@@ -48,3 +45,6 @@ feeManager.setConfig(config);
 const result = feeManager.run(file);
 
 result.map((el) => el.fee).forEach((fee) => console.log(fee));
+
+// for clean up old entries before 2016
+// feeManager.cleanup('2016-01-01');
