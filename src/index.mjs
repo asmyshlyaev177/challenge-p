@@ -44,7 +44,7 @@ feeManager.setConfig(config);
 
 const result = feeManager.run(file);
 
-result.map((el) => el.fee).forEach((fee) => console.log(fee));
+result.forEach((el) => console.log(el.fee));
 
 // for clean up old entries before 2016
 // feeManager.cleanup('2016-01-01');
