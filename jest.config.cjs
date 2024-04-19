@@ -4,26 +4,20 @@
 module.exports = {
   coverageDirectory: 'coverage',
   roots: ['src'],
-  testMatch: [
-    '**/__tests__/**/*.+(ts|tsx|js)',
-    '**/?(*.)+(spec|test).+(ts|tsx|js|mjs|cjs)',
-  ],
+  testMatch: ['**/?(*.)+(spec|test).+(js|mjs|cjs)'],
   transformIgnorePatterns: ['/node_modules/'],
-  // transform: {
-  //   '^.+\\.[c|m]?[t|j]sx?$': 'babel-jest',
-  // },
-  // snapshotResolver: '<rootDir>/snapshotResolver.cjs',
+  transform: {
+    '^.+\\.[m|c]?jsx?$': 'babel-jest',
+  },
   coveragePathIgnorePatterns: [
     'spec.js',
     'test.js',
     'service-worker',
     'coverage',
-    'cypress',
-    'cypress-coverage',
     'dist',
     'node_modules',
   ],
-  collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}'],
+  collectCoverageFrom: ['src/**/*.{js,jsx,cjs,mjs}'],
   coverageThreshold: {
     global: {
       lines: 10,
