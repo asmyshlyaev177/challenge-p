@@ -41,7 +41,7 @@ const checkFile = (args) => {
     file = JSON.parse(fs.readFileSync(filePath, { encoding: 'utf8' }));
   } catch (err) {
     console.error(
-      `Unknwon error when reading file "${fileName}" from ${process.cwd()}`,
+      `Can't parse JSON file "${fileName}" from ${process.cwd()}\n ${err}`,
     );
     process.exit(1);
   }

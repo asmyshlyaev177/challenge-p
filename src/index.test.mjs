@@ -27,7 +27,6 @@ const execCommand = async (command = '') => {
 
 describe('app cli', () => {
   describe('file argument', () => {
-    // TODO: add test for invalid JSON
     it('Should throw an error if file not provided', async () => {
       const res = await execCommand('npm run app');
       expect(res.code).toEqual(1);
